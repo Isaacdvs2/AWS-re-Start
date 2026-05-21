@@ -24,10 +24,10 @@ The Goal of the simulearn lab was to provide an AWS solution to assist a pet mod
 
 ### The Situation at the Company is as follows:
 
-The pet modeling agency wants a way to share files across its branch offices without managing physical storage infrastructure. In the past year, they have established **three new company branches in the city**. Each branch has its own pet image server that connects to a local client management application. Each server stores images of all our pet clients along with informational metadata. We use a custom application to sync the client data across all three branches. But it takes too much time to access the images, and it's not always consistent. Our synching solution fails sometimes because one branch server might run out of storage space. We need a solution that centralizes our image storage and scales automatically. all branches access and update the same pet client files. And we have certain folders for our VIP clients that only our concierge team has access to.
+The pet modeling agency wants a way to share files across its branch offices **without managing physical storage infrastructure**. In the past year, they have established **three new company branches in the city**. **Each branch has its own pet image server** that connects to a local client management application. Each server stores images of all the pet clients along with informational metadata. They **use a custom application to sync the client data** across all three branches. But **it takes too much time to access the images**, and **it's not always consistent**. The **synching solution fails sometimes** because one branch **server might run out of storage space**. They need a solution that **centralizes the image storage and scales automatically**. **All branches access and update the same pet client files**, and the agency **has certain folders for their VIP clients that only our concierge team has access to**.
 
 #### The situation at the agency can be visualized as follows:
-Click to expand the image
+Click to expand the image.
 <a href="./Resources/FileSystemsInTheCloud/PetsShopOriginalArch.drawio.svg">
   <img src="./Resources/FileSystemsInTheCloud/PetsShopOriginalArch.drawio.svg" 
        alt="Agency Arch Diag" 
@@ -36,13 +36,13 @@ Click to expand the image
 
 ---
 ## 2. AWS Solution to the Agency's I.T issues
-In summary, the agency's issues are centered around *Files Management and Storage*. Their other concerns regard latency issues, access management, synchronization, service availability, and scalability of resources as demand increases.
+In summary, the agency's issues are centered around *Files Management and Storage*. Their other concerns regard latency issues, access management, synchronization, service availability, reliability, and scalability of resources as demand increases.
 
-Amazon EFS meets the agency's requirements as follows"
-- The agency can create *shared network drives* so that the branches can access pet client photos from a *central location*, instead of files and folders residing in discrete and isolated servers that need frequent syncing. With AWS EFS, storage is central and compute is distributed.
-- They can *restrict access* with *file-level permissions* allowing the concierge team and the VIP client's maximum privacy.
-- Amazon EFS provides *petabyte-scale storage* that *grows and shrinks* automatically as you add and remove files. This saves the agency money as they need not buy bigger storage for their servers or EC2 instances which they may not size appropriately (paying for unused storage)
-- Amazon EFS is *highly available* and is designed for *99.999999999 percent durability*. Its a service that is always online and highly accessible/available.
+From analysis of the agency's pain points, **AWS EFS** meets the agency's requirements as follows:
+- The agency can create ***shared network drives*** so that the branches can access pet client photos from a ***central location***, instead of files and folders residing in discrete and isolated servers that need frequent syncing. With AWS EFS, ***storage is central and compute is distributed***.
+- They can ***restrict access*** with ***file-level permissions*** allowing the concierge team and the VIP client's **maximum privacy**.
+- Amazon EFS provides ***petabyte-scale storage*** that ***grows and shrinks automatically*** as you add and remove files. This saves the agency money as they need not buy bigger storage which they may ***not size appropriately*** (paying for unused storage) trying to account for the future demands
+- Amazon EFS is ***highly available*** and is designed for ***99.999999999 percent durability***. Its a service that is always online and highly accessible/available.
 
 ### The Proposed AWS Solution
 The proposed AWS EFS solution can be visualised below:
@@ -62,32 +62,37 @@ The proposed AWS EFS solution can be visualised below:
 
 ### Implementing the AWS EFS Solution
 The Workflow for creating an AWS solution (any solution actualy) for a client can be generally summarized as follows:
-* Requirements Gathering - understanding the business.
-* VPC Design - The company creates an AWS account for use with subnets in different AZ as needed.
-* Security Design - e.g., Allow inbound NFS (TCP 2049) only from EC2 instances selected (EFS security). Create EC2 security groups to allow out bound to EFS and inbound from company's ip addresses.
-* Create the EFS File system - Create the file system and configure it according to the client's requirements (naming, Encryption at rest, performance, throughput mode(bursting/provisioned)), etc
-* Create Mount Points/targets per AZ
-* Create EC2 instances - for each AZ. Attach roles or security groups as needed.
-* Mount EC2 to EFS - via CLI in the management console.
-* Solution Testing - simulate the client's day to day work and verify to ensure alignment with the requirements and that the client's needs are met. Simulate multi-instance file sharing across AZ'z, permission rules, performance under load, etc.
-* Project Sign Off and Recommendations - If the cloud architect (practitioner in this case🤦‍♂️) AWS solution met the requirements and the client is satisfied/happy, the client will sign-off the requirements document again and any work done on the project that was recorded by the Business Analyst.
+* **Requirements Gathering** - understanding the business.
+* **VPC Design** - The company creates an AWS account for use with subnets in different AZ as needed.
+* **Security Design** - e.g., Allow inbound NFS (TCP 2049) only from EC2 instances selected (EFS security). Create EC2 security groups to allow out bound to EFS and inbound from company's ip addresses.
+* **Create the EFS File system** - Create the file system and configure it according to the client's requirements (naming, Encryption at rest, performance, throughput mode(bursting/provisioned)), etc
+* **Create Mount Points/targets per AZ** - These connect the servers to the EFS
+* **Create EC2 instances** - for each AZ. Attach roles or security groups as needed.
+* **Mount EC2 to EFS** - via CLI in the management console.
+* **Solution Testing** - simulate the client's day to day work and verify to ensure alignment with the requirements and that the client's needs are met. Simulate multi-instance file sharing across AZ'z, permission rules, performance under load, etc.
+* **Project Sign Off and Recommendations** - If the cloud architect's (practitioner in this case🤦‍♂️) AWS solution met the requirements and the client is satisfied/happy, the client will sign-off the project and any work done on the project that was recorded by the Business Analyst.
 
-In this Simulearn task, the workflow will not be followed as described above as some resources have already been created for us. Below I cover the work done / lessons covered in the lab as arranged, although you will notice that all the steps of the workflow were covered except the last two workflows. *The process of creating an AWS account and logging in wont be covered here.*
+**NB:**In this Simulearn task, the workflow will not be followed as described above as some resources have already been created for us. Below I cover the work done / lessons covered in the lab, although you will notice that all the steps of the workflow were covered except the last two workflows (Testing and Project Sign-Off). ***The process of creating an AWS account and logging in wont be covered here***.
 
-1. Requirements Gathering : business first! Know the client's needs/problems/pain points with regards to their solutions/services. Gather all the details about their services features (latency rewuirements, security, availability etc) in order to make an informed decision about the suitable AWS services that will meet their needs. At the end of this process, a requirements document is created, shared, and agreed upon.
+1. ***Requirements Gathering*** : Understand the business first! Know the client's needs/problems/pain points with regards to their solutions/services. Gather all the details about their services features (latency requirements, security, availability etc) in order to ***make an informed decision about the suitable AWS service(s)*** that will meet their needs. At the end of this process, a requirements document (project plan and/or other docs) is created, shared, and agreed upon.
 
-The Agency's pain points have been identified in the [Goal Section](#the-situation-at-the-company-is-as-follows). We will not create a proper requirements document for this scenario as it has quite few pain points and for an AWS practitioner, the solution is straight forward. The solution is provided in [Section 2](#2-aws-solution-to-the-agencys-it-issues).
+The Agency's pain points have been identified in the [Goal Section](#the-situation-at-the-company-is-as-follows). We will not create a proper requirements document for this scenario as it has quite few pain points and for an AWS practitioner, the solution is straight forward. The solution details are provided in [Section 2](#2-aws-solution-to-the-agencys-it-issues).
 
 2. In the Simulearn environment, three EC2 instances were already created for us each in its designated AZ is US-East. We assume the agency's branches to be in the region US-East and closer to the assigned AZ.
+
 ![Web servers (EC2 instances) already created](./Resources/FileSystemsInTheCloud/img9.jpg)
 
-The webservers were already configured with a security group, were in a running state, and and were of a t3.micro type (suitable for labs mainly).
+The webservers were already configured with a security group, were in a running state, and and were of a t3.micro type (suitable for practice labs mainly).
+
 ![Security Group configured for the Web Servers](./Resources/FileSystemsInTheCloud/img12.jpg)
 
-The security group for the EFS service was also created as well. It contains 1 inbound and outbound rules, and it restricts access to web servers only. 
-![Security Group Config for AWS EFS](./Resources/FileSystemsInTheCloud/img15.jpg)
+The security group for the EFS service was also created as well. It contains 1 inbound and outbound rule, and it restricts access to web servers only. 
 
-3. The next task was to create the AWS EFS system from the management console. Clicking the "Create File System" allows us to proceed further to create and configure the EFS.
+![Security Group Config for AWS EFS](./Resources/FileSystemsInTheCloud/img15.jpg)  
+
+
+3. The next task was to create the AWS EFS system from the management console. Clicking the "Create File System" allows us to proceed further to create and configure the EFS.  
+
 ![EFS Page on the Management Console](./Resources/FileSystemsInTheCloud/img18.jpg)
 
 On the modal shown below, provide the name and the vpc to be used by the EFS, then click "Customize" to add more configurations:
