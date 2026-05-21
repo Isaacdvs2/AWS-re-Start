@@ -163,7 +163,7 @@ We made use of the EC2 instance's SSH Session Manager to connect and configure t
 
     * Created a "data" folder on each instance - this is the folder that is used as the mounting point for all the instances. This means that the data folder becomes the entry point to the EFS system, meaning its the specific location where EFS is accessible. Since all instances were mounted on the same directory location (data dir), all instances will see the same files. For our agency client, all photos and folders will be accessed and stored in the EFS via the data directory.
     * A mount cli command  was excuted to allow the EFS to mount the EC2 via the data directory.
-    * A log file was created inside the folder to log a record whenever the EFS was successfuly mounted on the EC2. *See the image below which shows the contents of the log file from Webserver 3, even though the log file's line 1 and 2 were added by separate web servers where the log file resides separately.*
+    * A log file was created inside the folder to log a record whenever the EFS was successfuly mounted to one of the EC2 instances. ***See the image below which shows the contents of the log file from Webserver 3, even though the log file's line 1 and 2 were added by separate web servers where the log file resides separately.***
 
     ![Webserver 3 cli window with the log file contents](./Resources/FileSystemsInTheCloud/img48.jpg)
 ---
@@ -172,19 +172,19 @@ The challenge was completed successfully and a completion certificate was awarde
 
 ![Completion Certificate](./Resources/FileSystemsInTheCloud/img55.jpg)
 ---
-## 4. Lessons Learnt
+## 4. Lessons Learned
 Below I would like to reflect on some things I learnt and found helpful.
-* Understanding the client problem very well will allow an AWS Cloud practitioner to provide a better AWS solution to the client that is cost effective and aligned to the business needs without surprise costs.
+* Understanding the client problem very well will allow an AWS Cloud practitioner to provide a better AWS solution to the client that is cost effective and aligned to the business needs without surprise costs in the future.
 * EFS File Policy setup is a must if a company has different employee roles, clients, and applications that access the EFS for various reasons.
 * Mounting the EFS on the same path of each EC2 instance makes file sharing easier because all instances see the same files. Data (folders, photos, and files) are consistent across the servers, all branch offices see/access the same files, syncronization is no longer an issue. Ensure that you mount to an empty path.
 ---
 ## Lab Details
 <details>
-<summary>Click To Expand</summary>
+<summary>Click to View</summary>
 
 **Lab link** -> [link](https://skillbuilder.aws/learn/A5M8X2CHM3/aws-simulearn-file-systems-in-the-cloud/)
-Search for *AWS SimuLearn: File Systems in the Cloud* on AWS SkillBuilder
-**Completed On**: 20 May 2026
+Search for ***AWS SimuLearn: File Systems in the Cloud*** on AWS SkillBuilder  
+**Completed On**: 20 May 2026  
 **Course Details**: AWS re/Start with **Praesignis**(AWS SA Partner)
 
 </details>
