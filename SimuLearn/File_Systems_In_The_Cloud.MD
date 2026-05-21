@@ -96,25 +96,27 @@ The security group for the EFS service was also created as well. It contains 1 i
 ![EFS Page on the Management Console](./Resources/FileSystemsInTheCloud/img18.jpg)
 
 On the modal shown below, provide the name and the vpc to be used by the EFS, then click "Customize" to add more configurations:
+
 ![EFS Page on the Management Console](./Resources/FileSystemsInTheCloud/img21.jpg)
 
 Next we go through some predefined steps in the Management Console to configure and create the EFS service. The steps are as follows:
 
-* File System Settings - name, we configure the EFS by providing the names and selecting the services/features that will meet our client's needs. The following configurations were made/selected: 
-- 
+* **File System Settings** - we configure the EFS by providing the names and selecting the services/features that will meet our client's needs. The following configurations were made/selected: 
+
     - The name - A clear, unique and sound name was chosen.
-    - A regional file system type to support the agency's branches across the region
+    - A suitable regional file system type, to support the agency's branches across the region
     - Auto-Backups and life cycle management option were not selected as the client did not mention them.
     -  The bursting throughput mode was selected for throughput to scale with the workload. 
+
 ![EFS Page on the Management Console](./Resources/FileSystemsInTheCloud/img24.jpg)
 
-* Next, we setup the Network Access - The VPC of the pet models agency was selected, as well as the mount targets for all the three web servers. The mount targets specify the AZ, security groups, and the related vpc details. If a mounting target for a specific AZ is not added, the web servers in that AZ will not connect to the EFS.  **NB**: *Only two are shown the image below*, but all three mount targets were created for the Webservers in the different AZ's, to meet the agency's need for all the 3 company branches. 
+* Next, we setup the Network Access - The VPC of the pet models agency was selected, as well as the mount targets for all the three web servers. The mount targets specify the AZ, security groups, and the related vpc details. If a mounting target for a specific AZ is not added, the web servers in that AZ will not connect to the EFS.  **NB**: ***Only two mounting targets are shown the image below***, but all three mount targets were created for the Webservers in the different AZ's, to meet the agency's need for all the 3 company branches. 
 
-![Two mount targets created](./Resources/FileSystemsInTheCloud/img44.jpg)
+    ![Two mount targets created](./Resources/FileSystemsInTheCloud/img44.jpg)
 
-**NB**: *You have to wait for the status of the mount point to change to **available** before it can be used for mounting.* See the image below:
+**NB**: ***You have to wait for the status of the mount point to change to **available*** before it can be used for mounting.* See the image below:  
 
-![An available mount point and a recently added mount point](./Resources/FileSystemsInTheCloud/img47.jpg)
+![An available mount point and a recently added mount point](./Resources/FileSystemsInTheCloud/img47.jpg)  
 
 * Next, we configure the File System Policy. Although this step was skipped in the lab, its a very important step as it aligns with the client's requirements. As the agency already mentioned that other employees have access to specific folders and that the concierge team and VIP clients have access to specific folders, this step allows us to meet that requirement. On the file system policy step, the following can be configured, to name a few:
     * Prevent root access - no user can gain root access and modify system level files or execute system wide commands
@@ -122,11 +124,13 @@ Next we go through some predefined steps in the Management Console to configure 
     * Concierge team can be allowed access to all folder types.
     * VIP clients can be allowed access to VIP folders only.
     * Prevent anonymous access to maximise the File System security.
-    * Enforce encryption rules for(specific) files and/or folders.
+    * Enforce encryption rules for applicable files and/or folders.
 
 ![Policy Config Step for the EFS](./Resources/FileSystemsInTheCloud/img30.jpg)
 
-This step is very crucial and AWS must include it in the future to give practitioners a real experience of how policies work! Without file system policy anyone with network access could mount the EFS! Combining security groups and file system policies ensures maximum security.
+This step is very crucial and AWS must include it in the future to give practitioners a real experience of how policies work! Without file system policy anyone with network access could mount the EFS! 
+
+>Combining security groups and file system policies ensures maximum security.
 
 * The next Step is to Review and Create the EFS. The page simply provides all the configs you made in one page for review. If all is well, simply click the "Create File System" button. 
 
@@ -135,22 +139,23 @@ This step is very crucial and AWS must include it in the future to give practiti
 
 Thus 4 steps were followed to confifure the EFS: **File system settings, Network Access, File System Policy, and Review**. 
 
-When the EFS is created, wait for its status to change to available! 
+>When the EFS is created, wait for its status to change to available! 
 
 ![The EFS successfuly created](./Resources/FileSystemsInTheCloud/img34.jpg)
 
-4. Mount EFS on EC2.
+4. **Mount EFS on EC2**.
 * To proceed, open the EFS page which provides more details and functionality to use and configure EFS.
 
 ![The PetModel's EFS page](./Resources/FileSystemsInTheCloud/img37.jpg)
 
-Click "Attach" button on the above page to access some important info.
+Click "Attach" button on the above page to access some important info and config details.
 
 * To mount EFS on EC2, configure the EFS to mount via DNS and note the CLI command to create a mounting point on EC2 using the EFS mount helper.
 
 ![The Modal with details to Attach the EFS](./Resources/FileSystemsInTheCloud/img40.jpg)
 
-We made use of the EC2 instance's SSH Session Manager to connect and configure the instances and to create a mounting point. The following tasks were completed on each web server, via the ssh session manager CLI and root access, in order to mount the EFS to the web servers successfuly:
+We made use of the EC2 instance's SSH Session Manager to connect and configure the instances and to create a mounting point. The following tasks were completed on each web server, via the ssh session manager CLI and root access, in order to mount the EFS to the web servers successfuly:  
+
 * 
     * Installing the amazon EFS utilities - an official AWS package that makes mounting and using the EFS from linux instances easy.
     
